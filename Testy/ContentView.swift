@@ -11,7 +11,7 @@ struct ContentView: View {
     
     let url = URL(string: "https://api.chucknorris.io/jokes/random")!
     let imageName = "cowboy_6342596"
-    @State private var joke = ""
+    @AppStorage("joke") private var joke = "Press the button"
     var body: some View {
         NavigationStack {
             VStack {

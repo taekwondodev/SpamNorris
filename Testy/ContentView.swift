@@ -8,15 +8,43 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    let url = URL(string: "https://api.chucknorris.io/jokes/random")!
+    let imageName = "cowboy_6342596"
+    @State private var joke = ""
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            VStack {
+                Image(imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: .infinity, alignment: .top)
+                    .padding()
+                Text(joke)
+                    .foregroundStyle(.foreground)
+                    .padding()
+                Button("Fetch joke") {
+                    Task{
+                        do{
+                            let (data, _) = try await URLSession.shared.data(from: url)
+                            let decodeResponse = try JSONDecoder().decode(Joke.self, from: data)
+                            
+                            joke = decodeResponse.value
+                        }
+                        catch{
+                            print("failed to fetch: \(error)")
+                        }
+                    }
+                }
+                .padding()
+                .navigationTitle("Spam Norris")
+                
+            }
+            .preferredColorScheme(.dark)
         }
-        .padding()
     }
+    
+    
 }
 
 #Preview {
